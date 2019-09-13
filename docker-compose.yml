@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+
+  secrets_hmad:
+    image: azoff/mount-k8s-secrets:1.0.0
+    command: hmad
+    volumes:
+      - secrets:/run/secrets
+
+  hmad:
+    init: true
+    image: azoff/hmad
+    build: .
+    environment:
+      - SECRETS_PATH=/run/secrets/hmad/secrets.json
+    volumes:
+      - secrets:/run/secrets
+      - ./api:/app/api
+      - ./assets:/app/assets
+      - ./index.html:/app/index.html
+    ports:
+      - "8080:8080"
+
+volumes:
+  secrets:

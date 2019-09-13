@@ -1,0 +1,31 @@
+{
+  "name": "hmad",
+  "version": "1.0.0",
+  "description": "Harrison Metal Alumni Dinner Registration",
+  "main": "index.html",
+  "repository": "git@bitbucket.org:23cyan/hmad.git",
+  "author": "Jonathan Azoff <jon@azof.fr>",
+  "license": "unlicensed",
+  "private": true,
+  "scripts": {
+    "start": "nodemon --verbose api/index.js",
+    "tag": "echo k8s.azof.fr/azoff/hmad:$(jq -r .version package.json)",
+    "build": "docker build . -t $(npm run --silent tag)",
+    "predeploy": "sed -i '' \"s%image: .*%image: $(npm run --silent tag)%g\" deployment.yml && git add deployment.yml",
+    "deploy": "kubectl apply -f deployment.yml",
+    "push": "git push && git push --tags && docker push $(npm run --silent tag)",
+    "version": "npm run build && npm run predeploy",
+    "postversion": "npm run push && npm run deploy"
+  },
+  "dependencies": {
+    "google-spreadsheet": "^2.0.6",
+    "nodemailer": "^4.7.0",
+    "stripe": "^6.17.0"
+  },
+  "devDependencies": {
+    "express": "^4.16.4",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.7",
+    "now": "^14"
+  }
+}

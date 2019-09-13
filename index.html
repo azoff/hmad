@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Harrison Metal Alumni Dinner</title>
+	<link rel="stylesheet" type="text/css" href="/assets/fonts.css">
+	<link rel="stylesheet" type="text/css" href="/assets/style.css">
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+	<link rel="manifest" href="/assets/images/site.webmanifest">
+	<link rel="mask-icon" href="/assets/images/safari-pinned-tab.svg" color="#b89e8b">
+	<link rel="shortcut icon" href="/assets/images/favicon.ico">
+	<meta name="apple-mobile-web-app-title" content="Alumni Dinner">
+	<meta name="application-name" content="Alumni Dinner">
+	<meta name="msapplication-TileColor" content="#b89e8b">
+	<meta name="msapplication-config" content="/assets/images/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+	<meta content="Harrison Metal Alumni Dinner" property="og:title">
+	<meta content="A private chef, an intimate venue, and a host of A++ people, every six weeks. What more could you ask for?!" property="og:description">
+	<meta content="A private chef, an intimate venue, and a host of A++ people, every six weeks. What more could you ask for?!" property="og:description">
+	<meta content="https://harrisonmetalu.mn/assets/images/2.jpg" property="og:image">
+</head>
+<body>
+	<aside>
+		<div id="slideshow">
+			<div class="active" style="background-image:url('/assets/images/0.jpg')"></div>
+			<div style="background-image:url('/assets/images/1.jpg')"></div>
+			<div style="background-image:url('/assets/images/2.jpg')"></div>
+			<div style="background-image:url('/assets/images/3.jpg')"></div>
+			<div style="background-image:url('/assets/images/4.jpg')"></div>
+			<div style="background-image:url('/assets/images/5.jpg')"></div>
+			<div style="background-image:url('/assets/images/6.jpg')"></div>
+		</div>
+		<h1>Harrison Metal</h1>
+		<h2>Alumni Dinner</h2>
+		<p>A bi-quarterly, grassroots dinner party for the alumni of <a href="https://harrisonmetal.com">Harrison Metal</a>'s <a href="https://www.harrisonmetal.com/classes/foundations-general-management">General Management</a> program. Please use this form to register for the next dinner.</p>
+	</aside>
+	<main>
+		<form action="api/" method="post" id="payment-form">
+			<h2>Dinner <span data-dinner="number"></span></h2>
+			<ul class="details">
+				<li><span class="label">date</span><span data-dinner="datetime"></span></li>
+				<li><span class="label">theme</span><span data-dinner="theme"></span></li>
+				<li><span class="label">venue</span><span data-dinner="venue"></span></li>
+				<li><span class="label">price</span><span data-dinner="price"></span></li>
+				<li><span class="label">chef</span><span data-dinner="chef"></span></li>
+				<li><span class="label">menu</span><span data-dinner="menu"></span></li>
+			</ul>
+			<div class="form-group">
+				<label for="name">Name</label>
+				<input type="text" id="name" name="name" placeholder="John Doe" required>
+			</div>
+			<div class="form-group">
+				<label for="name">Email</label>
+				<input id="email" name="email" type="email" placeholder="john@gmail.com" required>
+			</div>
+		  	<div class="form-group">
+				<label for="card-element">Payment Information</label>
+				<div class="form-element" data-stripe-element-name="card"></div>
+			</div>
+			<div id="alert" role="alert"></div>
+			<button name="button" class="notice" type="submit">
+				Register for <span data-dinner="price"></span>
+			</button>
+			<small>All tickets fully refundable up to 48-hours before the event</small>
+		</form>
+	</main>
+	<script src="https://js.stripe.com/v3/"></script>
+	<script src="/assets/client.js"></script>
+</body>
+</html>

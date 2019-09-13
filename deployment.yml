@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hmad
+  labels:
+    app: hmad
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hmad
+  template:
+    metadata:
+      labels:
+        app: hmad
+    spec:
+      containers:
+      - name: hmad
+        image: k8s.azof.fr/azoff/hmad:1.0.0
+        env:
+          - name: SECRETS_PATH
+            value: /run/secrets/hmad/secrets.json
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: google-auth-json
+            mountPath: /run/secrets/hmad/secrets.json
+            subPath: google-auth.json
+      imagePullSecrets:
+      - name: dockerconfigjson
+      volumes:
+      - name: secrets-json
+        secret:
+          secretName: hmad
+          items:
+          - key: secrets.json
+            path: secrets.json

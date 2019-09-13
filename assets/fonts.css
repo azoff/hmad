@@ -1,0 +1,39 @@
+@font-face {
+    font-family: 'UniversLTPro-55Roman';
+    src: url(/assets/fonts/327AE6_0_0-9081277d8b6490cd6f13a24c8062bbf5ffeabb9a485b8f67f5ec64683dbfa285.eot);
+    src: url(/assets/fonts/327AE6_0_0-9081277d8b6490cd6f13a24c8062bbf5ffeabb9a485b8f67f5ec64683dbfa285.eot?#iefix) format("embedded-opentype"),
+    	url(/assets/fonts/327AE6_0_0-539f5d179a3f78937631842f1b9ef407d9bf544fe0490104885cb28f6acf8385.woff2) format("woff2"),
+    	url(/assets/fonts/327AE6_0_0-d47d39bb3dfb4bd54a03322ad6e1ffc77fcf971e4df487a3eabf70f2e4f36153.woff) format("woff"),
+    	url(/assets/fonts/327AE6_0_0-7d3928712e7f1cdc8cf0b0aaf6c05e802f8f60840468c2379e72ccd08e52dee1.ttf) format("truetype")
+}
+
+@font-face {
+    font-family: 'UniversLTPro-75Black';
+    src: url(/assets/fonts/327AE6_1_0-7dd9fbd287d174ec392c60322d6d4e483e93e478c191f1489e55b8a380ad5a8a.eot);
+    src: url(/assets/fonts/327AE6_1_0-7dd9fbd287d174ec392c60322d6d4e483e93e478c191f1489e55b8a380ad5a8a.eot?#iefix) format("embedded-opentype"),
+	    url(/assets/fonts/327AE6_1_0-3181cb0d3e182f7872e8279f2f54df285ade3c561534ce2a306e9be44f6e5e25.woff2) format("woff2"),
+	    url(/assets/fonts/327AE6_1_0-b9183641e6cff31a496e1578c65dfc8bb156c92df87f0aa46c4f9e717bce6bc0.woff) format("woff"),
+	    url(/assets/fonts/327AE6_1_0-59bd5d98b92066bbde3957f76b4b2e6f54f09375df91fa2d4b9830fa3ced7254.ttf) format("truetype")
+}
+
+@font-face {
+    font-family: 'UniversLTStd-Bold';
+    src: url(/assets/fonts/327AE6_2_0-81805a49c29b73645e698b24d7d13c776f9cb29cc94edb0785ccd344dac51703.eot);
+    src: url(/assets/fonts/327AE6_2_0-81805a49c29b73645e698b24d7d13c776f9cb29cc94edb0785ccd344dac51703.eot?#iefix) format("embedded-opentype"),
+	    url(/assets/fonts/327AE6_2_0-2b1e8bfba5e48383ed60c5f7e467a89e131f80ac57bf83f1a46e1998eaa04abe.woff2) format("woff2"),
+	    url(/assets/fonts/327AE6_2_0-a9e9b0a5774345251c393e7b8dbfd6803826432d9bbcee6aaf1837b68acb3a53.woff) format("woff"),
+	    url(/assets/fonts/327AE6_2_0-382dcaf8c4b2e3dd802855392f54e9541f1810f6a1ced859481c2381707e7ac2.ttf) format("truetype")
+}
+
+@font-face {
+	font-family: "Antenna Cond Med";
+	font-weight: Normal;
+	font-style: Normal;
+
+	src: url("/assets/fonts/Antenna-Condensed_Medium_unobfuscated_5zzDoyG.eot");
+        src: url("/assets/fonts/Antenna-Condensed_Medium_unobfuscated_5zzDoyG.eot#iefix") format("embedded-opentype"),
+             url("/assets/fonts/Antenna-Condensed_Medium_unobfuscated_5zzDoyG.woff") format("woff2"),
+             url("/assets/fonts/Antenna-Condensed_Medium_unobfuscated_5zzDoyG.woff2") format("woff");
+
+}
+
