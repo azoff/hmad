@@ -11,7 +11,9 @@ ENV PORT=$DEFAULT_PORT
 ARG SECRETS_PATH=/run/secrets/hmad/secrets.json
 ENV SECRETS_PATH=$SECRETS_PATH
 
-ADD api/ assets/ index.html /app/
+ADD index.html /app/
+ADD api /app/api
+ADD assets /app/assets
 
 CMD yarn start
 
