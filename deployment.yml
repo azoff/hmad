@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: hmad
-        image: k8s.azof.fr/azoff/hmad:1.0.0
+        image: k8s.azof.fr/azoff/hmad:1.0.1
         env:
           - name: SECRETS_PATH
             value: /run/secrets/hmad/secrets.json
