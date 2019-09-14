@@ -172,7 +172,7 @@ const icalAttachment = context => ({
 async function confirm({ customer, order, dinner }) {
 	const attachments = []
 	try {
-		attachments = [icalAttachment({ order, dinner })]
+		attachments.push(icalAttachment({ order, dinner }))
 	} catch(ex) {
 		console.warn(ex.stack)
 	}
