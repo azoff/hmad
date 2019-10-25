@@ -2,6 +2,7 @@ const url = require('url')
 const util = require('util')
 const secrets = require(process.env.SECRETS_PATH)
 const stripe = require('stripe')(secrets.STRIPE_SECRET_KEY)
+const nodemailer = require('nodemailer')
 
 const mailerReady = (async function retry(){
 	try {
