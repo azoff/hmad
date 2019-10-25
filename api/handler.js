@@ -3,20 +3,26 @@ const util = require('util')
 const secrets = require(process.env.SECRETS_PATH)
 const stripe = require('stripe')(secrets.STRIPE_SECRET_KEY)
 
-const mail = require('nodemailer').createTransport({
-	pool: true,
-	secure: true,
-	host: secrets.SMTP_HOSTNAME,
-	auth: {
-		user: secrets.SMTP_USERNAME,
-		pass: secrets.SMTP_PASSWORD
+const mailerReady = (async function(){
+	try {
+		const mailer = nodemailer.createTransport({
+			pool: true,
+			secure: true,
+			host: secrets.SMTP_HOSTNAME,
+			auth: {
+				user: secrets.SMTP_USERNAME,
+				pass: secrets.SMTP_PASSWORD
+			}
+		})
+		await mailer.verify()
+		console.log('connected to SMTP account:', secrets.SMTP_USERNAME)
+		return mailer
+	} catch(err) {
+		mailer = null
+		console.error('unable to connect to SMTP host:' + err.toString())
+		return connectMailer()
 	}
-})
-
-mail.verify(err => {
-   if (err) throw new Error('unable to connect to SMTP host:'+err.toString())
-   console.log('connected to SMTP account:', secrets.SMTP_USERNAME)
-});
+})()
 
 const GoogleSpreadsheet = require('google-spreadsheet')
 const gsheet = new GoogleSpreadsheet(secrets.GOOGLE_SHEET_ID)
@@ -178,16 +184,15 @@ async function confirm({ customer, order, dinner }) {
 	}
 	try {
 		console.log(`sending confirmation to ${customer.email} for dinner ${dinner.id}...`)
-		const sent = promiser()
-		mail.sendMail({
+		const mailer = await mailerReady
+		const msg = await mail.sendMail({
 		    from: secrets.MAIL_FROM_ADDRESS,
 		    // bcc: secrets.MAIL_BCC_ADDRESS,
 		    to: customer.email,
 		    subject: `We'll see you for dinner!`,
 		    html: confirmationHTML({ customer, order, dinner }),
 		    attachments
-		}, sent.callback)
-		const msg = await sent
+		})
 		console.log('email sent:', msg.messageId)
 		return msg
 	} catch(ex) {
