@@ -3,7 +3,7 @@ const util = require('util')
 const secrets = require(process.env.SECRETS_PATH)
 const stripe = require('stripe')(secrets.STRIPE_SECRET_KEY)
 
-const mailerReady = (async function(){
+const mailerReady = (async function retry(){
 	try {
 		const mailer = nodemailer.createTransport({
 			pool: true,
@@ -18,9 +18,8 @@ const mailerReady = (async function(){
 		console.log('connected to SMTP account:', secrets.SMTP_USERNAME)
 		return mailer
 	} catch(err) {
-		mailer = null
 		console.error('unable to connect to SMTP host:' + err.toString())
-		return connectMailer()
+		return retry()
 	}
 })()
 
@@ -185,7 +184,7 @@ async function confirm({ customer, order, dinner }) {
 	try {
 		console.log(`sending confirmation to ${customer.email} for dinner ${dinner.id}...`)
 		const mailer = await mailerReady
-		const msg = await mail.sendMail({
+		const msg = await mailer.sendMail({
 		    from: secrets.MAIL_FROM_ADDRESS,
 		    // bcc: secrets.MAIL_BCC_ADDRESS,
 		    to: customer.email,
