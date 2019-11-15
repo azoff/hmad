@@ -44,8 +44,8 @@ function json(res, obj, status=200) {
 
 async function track(context) {
 	try {
-
-		console.log(`tracking ${context.customer.email} for dinner ${context.dinner.id}...`)
+		const title = context.dinner.id
+		console.log(`tracking ${context.customer.email} for dinner ${title}...`)
 
 		const auth = promiser()
 		gsheet.useServiceAccountAuth(googleServiceAccount, auth.callback)
