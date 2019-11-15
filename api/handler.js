@@ -4,26 +4,6 @@ const secrets = require(process.env.SECRETS_PATH)
 const stripe = require('stripe')(secrets.STRIPE_SECRET_KEY)
 const nodemailer = require('nodemailer')
 
-const mailerReady = (async function retry(){
-	try {
-		const mailer = nodemailer.createTransport({
-			pool: true,
-			secure: true,
-			host: secrets.SMTP_HOSTNAME,
-			auth: {
-				user: secrets.SMTP_USERNAME,
-				pass: secrets.SMTP_PASSWORD
-			}
-		})
-		await mailer.verify()
-		console.log('connected to SMTP account:', secrets.SMTP_USERNAME)
-		return mailer
-	} catch(err) {
-		console.error('unable to connect to SMTP host:' + err.toString())
-		return retry()
-	}
-})()
-
 const GoogleSpreadsheet = require('google-spreadsheet')
 const gsheet = new GoogleSpreadsheet(secrets.GOOGLE_SHEET_ID)
 const googleServiceAccount = {
@@ -44,17 +24,6 @@ const promiser = function() {
 	return promise
 }
 
-const docReady = (async function(){
-	const auth = promiser()
-	gsheet.useServiceAccountAuth(googleServiceAccount, auth.callback)
-	await auth
-	const info = promiser()
-	gsheet.getInfo(info.callback)
-	const doc = await info
-	console.log('connected to google sheets:', doc.title.toLowerCase())
-	return doc
-})()
-
 const serializer = {
 	created: ({ order }) => new Date(order.created*1000).toISOString(),
 	name: ({ customer }) => customer.description,
@@ -73,30 +42,38 @@ function json(res, obj, status=200) {
     res.end(JSON.stringify(obj))
 }
 
-async function ensureSheetExists({ dinner: { id: title } }) {
-	const doc = await docReady
-	const sheets = doc.worksheets.filter(s => s.title == title)
-	if (sheets.length > 0) {
-		console.info(`found registration sheet for dinner: ${sheets[0].title}`)
-		return sheets[0]
-	}
-
-	console.warn(`unable to find sheet for dinner ${title}, creating one...`)
-	let async = promiser()
-	gsheet.addWorksheet({ title }, async.callback)
-	const sheet = await async
-
-	async = promiser()
-	sheet.setHeaderRow(Object.keys(serializer), async.callback)
-	await async
-
-	return sheet
-}
-
 async function track(context) {
 	try {
+
 		console.log(`tracking ${context.customer.email} for dinner ${context.dinner.id}...`)
-		const sheet = await ensureSheetExists(context)
+
+		const auth = promiser()
+		gsheet.useServiceAccountAuth(googleServiceAccount, auth.callback)
+		await auth
+
+		const docReady = promiser()
+		gsheet.getInfo(docReady.callback)
+		const doc = await docReady
+
+		console.log('connected to google sheets:', doc.title.toLowerCase())
+
+		const sheets = doc.worksheets.filter(s => s.title == title)
+		let sheet = null
+		if (sheets.length > 0) {
+			sheet = sheets[0]
+		} else {
+			console.warn(`unable to find sheet for dinner ${title}, creating one...`)
+			const sheetAdded = promiser()
+			gsheet.addWorksheet({ title }, sheetAdded.callback)
+			sheet = await sheetAdded
+
+			colsReady = promiser()
+			sheet.setHeaderRow(Object.keys(serializer), colsReady.callback)
+			await colsReady
+		}
+
+		console.info(`using registration sheet for dinner: ${sheet.title}`)
+
 		const reducer = (acc, key) => { acc[key] = serializer[key](context); return acc }
 		const seriailized = Object.keys(serializer).reduce(reducer, {})
 		const row = promiser()
@@ -104,8 +81,9 @@ async function track(context) {
 		const done = await row
 		console.log('order registered:', done.id)
 		return done
+
 	} catch (ex) {
-		console.warn(ex.stack)
+		console.error(ex.stack)
 		return null
 	}
 }
@@ -130,7 +108,7 @@ const confirmationHTML = ({ customer, order, dinner }) => `
 		</p>
 		<table border="1" cellpadding="8" style="table-layout:fixed;width:100%;border-color:#DDD;border-spacing:0;border-collapse:collapse;border-radius:3px">
 			<tbody>
-				<tr><td style="width:8rem" align="right">Date</td> <td>${(new Date(dinner.attributes.datetime)).toLocaleString()}</td></tr>
+				<tr><td style="width:8rem" align="right">Date</td> <td>${dinner.attributes.datetime}</td></tr>
 				<tr><td align="right">Theme</td> <td>${dinner.attributes.theme}</td></tr>
 				<tr><td align="right">Venue</td> <td>${dinner.attributes.venue}</td></tr>
 				<tr><td align="right">Chef</td> <td>${dinner.attributes.chef}</td></tr>
@@ -184,7 +162,17 @@ async function confirm({ customer, order, dinner }) {
 	}
 	try {
 		console.log(`sending confirmation to ${customer.email} for dinner ${dinner.id}...`)
-		const mailer = await mailerReady
+		const mailer = nodemailer.createTransport({
+			pool: true,
+			secure: true,
+			host: secrets.SMTP_HOSTNAME,
+			auth: {
+				user: secrets.SMTP_USERNAME,
+				pass: secrets.SMTP_PASSWORD
+			}
+		})
+		await mailer.verify()
+		console.log('connected to SMTP account:', secrets.SMTP_USERNAME)
 		const msg = await mailer.sendMail({
 		    from: secrets.MAIL_FROM_ADDRESS,
 		    // bcc: secrets.MAIL_BCC_ADDRESS,
