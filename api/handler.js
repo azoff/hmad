@@ -230,7 +230,7 @@ const post = async (res, req) => {
 		})
 
 		console.log(`paying order ${cart.id}...`)
-		const order = await stripe.orders.pay(cart.id, { customer: customer.id })
+		const order = await stripe.orders.pay(cart.id, { source: token })
 
 		console.log('order complete:', order.id)
 		const dinner = await stripe.skus.retrieve(sku)
