@@ -139,7 +139,7 @@ PRODID:-//hmad/cal//1.0//EN
 BEGIN:VEVENT
 UID:${order.id}
 DTSTAMP:${icalDate()}
-ORGANIZER;CN=Jonathan Azoff:MAILTO:${secrets.MAIL_BCC_ADDRESS}
+ORGANIZER;CN=${secrets.ICAL_ORGANIZER_CN}
 DTSTART:${icalDate(dinner.attributes.datetime)}
 DTEND:${icalDate(dinner.attributes.datetime, 2.5)}
 SUMMARY:Dinner ${dinner.id.replace(/\D+/g, '')} - ${dinner.attributes.theme}
@@ -175,7 +175,6 @@ async function confirm({ customer, order, dinner }) {
 		console.log('connected to SMTP account:', secrets.SMTP_USERNAME)
 		const msg = await mailer.sendMail({
 		    from: secrets.MAIL_FROM_ADDRESS,
-		    // bcc: secrets.MAIL_BCC_ADDRESS,
 		    to: customer.email,
 		    subject: `We'll see you for dinner!`,
 		    html: confirmationHTML({ customer, order, dinner }),
